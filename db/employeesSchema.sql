@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS aycompany_db;
 CREATE DATABASE aycompany_db;
 USE aycompany_db;
 
+-- build and run three tables: department,rol , and employee in mysql workbanch 
 CREATE TABLE department (
   id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) UNIQUE NOT NULL

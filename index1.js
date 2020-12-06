@@ -1,7 +1,9 @@
 const inquirer = require("inquirer");
 let cTable = require("console.table");
-// require("dotenv").config();
+require("dotenv").config();
 const queries = require("./utils/queryBuilder");
+
+// prompts for adding employee and role
 const addPrompts = async (key) => {
   const prompts = {
     employee: [
@@ -21,9 +23,9 @@ const addPrompts = async (key) => {
         message: "What is this employee's role?",
         choices: async () => {
           const roles = await queries.viewAll("role");
-          return roles.map((role) => ({
-            name: role.title,
-            value: role.id,
+          return roles.map((eachRole) => ({
+            name: eachRole.title,
+            value: eachRole.id,
           }));
         },
       },
@@ -33,9 +35,9 @@ const addPrompts = async (key) => {
         message: "Who is this person's manager?",
         choices: async () => {
           const employees = await queries.viewAll("employee");
-          return employees.map((employee) => ({
-            name: `${employee.first_name} ${employee.last_name}`,
-            value: employee.id,
+          return employees.map((eachEmployee) => ({
+            name: `${eachEmployee.first_name} ${eachEmployee.last_name}`,
+            value: eachEmployee.id,
           }));
         },
       },
@@ -57,9 +59,9 @@ const addPrompts = async (key) => {
         message: "Which department do you want to add this new role in?",
         choices: async () => {
           const departments = await queries.viewAll("department");
-          return departments.map((department) => ({
-            name: `${department.name}`,
-            value: department.id,
+          return departments.map((eachDepartment) => ({
+            name: `${eachDepartment.name}`,
+            value: eachDepartment.id,
           }));
         },
       },
@@ -67,6 +69,8 @@ const addPrompts = async (key) => {
   };
   return prompts[key];
 };
+
+// prompts for update employee's role and manager
 const updatePrompts = async (key) => {
   const basePrompt = [
     {
@@ -85,8 +89,8 @@ const updatePrompts = async (key) => {
 
   const extraPrompts = {
     role: {
-      name: "role_id",
-      message: "What is their new role?",
+      name: "role_id", //display TABLE employee - FOREIGN KEY role_id
+      message: "What is the new role of this employee?",
       type: "list",
       choices: async () => {
         const roles = await queries.viewAll("role");
@@ -97,9 +101,9 @@ const updatePrompts = async (key) => {
       },
     },
     manager: {
-      name: "manager_id",
+      name: "manager_id", //display TABLE employee - FOREIGN KEY manager_id
       type: "list",
-      message: "Who is their new manager?",
+      message: "Who is the new manager for this employee?",
       choices: async () => {
         const employees = await queries.viewAll("employee");
         return employees.map((eachEmployee) => ({
@@ -113,6 +117,7 @@ const updatePrompts = async (key) => {
   return basePrompt;
 };
 
+// prompts for remove employee , role and department
 const removePrompts = async (key) => {
   const prompts = {
     employee: [
@@ -136,9 +141,9 @@ const removePrompts = async (key) => {
         message: "Which role would you like to remove?",
         choices: async () => {
           const roles = await queries.viewAll("role");
-          return roles.map((role) => ({
-            name: `${role.title}`,
-            value: role.id,
+          return roles.map((eachRole) => ({
+            name: `${eachRole.title}`,
+            value: eachRole.id,
           }));
         },
       },
@@ -162,6 +167,7 @@ const removePrompts = async (key) => {
 };
 
 startSearch();
+// prompt for what to do
 async function startSearch() {
   inquirer
     .prompt({
@@ -169,16 +175,15 @@ async function startSearch() {
       type: "rawlist",
       message: "What would you like to do?",
       choices: [
-        "View All Employees",
         "View All Departments",
-        "Add A Department",
-        "Remove A Department",
         "View All Employees",
         "View Employees by Department",
         "View Employees by Manager",
+        "View All Roles",
+        "Add A Department",
+        "Remove A Department",
         "Add An Employee",
         "Remove An Employee",
-        "View All Roles",
         "Add A Role",
         "Remove A Role",
         "Update An Employee Role",
@@ -186,6 +191,7 @@ async function startSearch() {
         "EXIT",
       ],
     })
+    // use switch statment for wait each query to get it's result, and then pass the result in inquirer to update the database
     .then(async function (answer) {
       switch (answer.action) {
         case "View All Departments": //work
@@ -193,12 +199,12 @@ async function startSearch() {
           console.table(departments);
           break;
         case "View All Employees": // work
-          const employees = await queries.viewAll("employee");
+          const employees = await queries.viewAllEmployees("employee");
           console.table(employees);
           break;
 
         case "View All Roles": // work
-          const roles = await queries.viewAll("role");
+          const roles = await queries.viewAllRoles("role");
           console.table(roles);
           break;
 
@@ -327,7 +333,7 @@ async function startSearch() {
               const empls = await queries.viewAll("employee");
               return empls.map((eachEmployee) => ({
                 name: `${eachEmployee.first_name} ${eachEmployee.last_name}`,
-                value: eachEmployee.manager_id,
+                value: eachEmployee.employee_id,
               }));
             },
           };

@@ -1,5 +1,5 @@
 
-
+-- create database for aycompany_db
 INSERT INTO department (name)
 VALUES 
 ("Executive"), 
