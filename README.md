@@ -10,7 +10,7 @@ This note CLI application is built for the company to has the databases of emplo
 - [Functionality](#Functionality)
 - [Usage](#Usage)
 - [Challenge](#Challenge)
-- [Screenshot](#screenshot)
+- [Screenshots](#screenshots)
 - [Demo](#demo)
 - [License](#license)
 - [Questions](#questions)
