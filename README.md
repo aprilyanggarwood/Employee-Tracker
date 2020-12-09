@@ -50,13 +50,15 @@ The user is able to use this application to view, add, update and remove employe
 - Refactor database queries with async/await and Promises.
 - Use mysql workbench to create and display tables and data based on user's needs.
 
-## Screenshot
+## Screenshots
 
-![application-screenshot]()
+![application-screenshot](./Assets/img-and-demo/employee-tracker-img.png)
+![application-screenshot](./Assets/img-and-demo/employee-tracker-img1.png)
+![application-screenshot](./Assets/img-and-demo/employee-tracker-img2.png)
 
 ## Demo
 
-[DemoLink]()
+[DemoLink](https://drive.google.com/file/d/14eHeIQVKbR_bH9DbNuB5xjDNh0viMsW_/view)
 
 ## License
 
