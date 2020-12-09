@@ -194,21 +194,21 @@ async function startSearch() {
     // use switch statment for wait each query to get it's result, and then pass the result in inquirer to update the database
     .then(async function (answer) {
       switch (answer.action) {
-        case "View All Departments": //work
+        case "View All Departments":
           const departments = await queries.viewAll("department");
           console.table(departments);
           break;
-        case "View All Employees": // work
+        case "View All Employees":
           const employees = await queries.viewAllEmployees("employee");
           console.table(employees);
           break;
 
-        case "View All Roles": // work
+        case "View All Roles":
           const roles = await queries.viewAllRoles("role");
           console.table(roles);
           break;
 
-        case "Add A Department": // work
+        case "Add A Department":
           const addDeptResponse = await inquirer.prompt({
             name: "name",
             type: "input",
@@ -218,42 +218,42 @@ async function startSearch() {
           console.log("deparment added!");
           break;
 
-        case "Remove A Department": // work
+        case "Remove A Department":
           const removeDeptPrompt = await removePrompts("department");
           const deptResponse = await inquirer.prompt(removeDeptPrompt);
           await queries.removeOne("department", deptResponse);
           console.log("department removed!");
           break;
 
-        case "Add An Employee": // work
+        case "Add An Employee":
           const employeePrompt = await addPrompts("employee");
           const employeeResponse = await inquirer.prompt(employeePrompt);
           await queries.addOne("employee", employeeResponse);
           console.log("employee added!");
           break;
 
-        case "Remove An Employee": // work
+        case "Remove An Employee":
           const removeEmpPrompt = await removePrompts("employee");
           const empResponse = await inquirer.prompt(removeEmpPrompt);
           await queries.removeOne("employee", empResponse);
           console.log("employee removed!");
           break;
 
-        case "Add A Role": // work
+        case "Add A Role":
           const rolePrompt = await addPrompts("role");
           const roleResponse = await inquirer.prompt(rolePrompt);
           await queries.addOne("role", roleResponse);
           console.log("role added!");
           break;
 
-        case "Remove A Role": // work
+        case "Remove A Role":
           const removeRolePrompt = await removePrompts("role");
           const removeRoleResponse = await inquirer.prompt(removeRolePrompt);
           await queries.removeOne("role", removeRoleResponse);
           console.log("role removed!");
           break;
 
-        case "Update An Employee Role": // work
+        case "Update An Employee Role":
           const updateRolePrompt = await updatePrompts("role");
           const updateRoleResponse = await inquirer.prompt(updateRolePrompt);
           await queries.updateOne(
@@ -264,7 +264,7 @@ async function startSearch() {
           console.log("employee'role updated!");
           break;
 
-        case "Update An Employee Manager": // work
+        case "Update An Employee Manager":
           const updateManagerPrompt = await updatePrompts("manager");
           const updateManagerResponse = await inquirer.prompt(
             updateManagerPrompt
@@ -276,33 +276,6 @@ async function startSearch() {
           );
           console.log("employee's manager updated!");
           break;
-
-        // case "View All Employees":
-        //   const depts = await inquirer.prompt(viewEmpBy);
-        //   const empByDep = await queries.viewEmpBy(depts);
-
-        //   console.table(empByDep);
-
-        //   const empByDep = await queries.viewEmpBy(depts);
-        //   console.table(empByDep);
-        // const viewAllByDeptPrompt = {
-        //   name: "id",
-        //   type: "list",
-        //   message: "Which Department would you like to view?",
-        //   choices: async () => {
-        //     const deps = await queries.viewAll("department");
-        //     return deps.map((eachDepartment) => ({
-        //       name: eachDepartment.name,
-        //       value: eachDepartment.id,
-        //     }));
-        //   },
-        // };
-        // const depts = await inquirer.prompt(viewAllByDeptPrompt);
-        // const empByDep = await queries.viewEmpBy(depts);
-
-        // console.table(empByDep);
-
-        // break;
 
         case "View Employees by Department":
           const viewByDeptPrompt = {
@@ -330,11 +303,17 @@ async function startSearch() {
             type: "list",
             message: "Which Manager would you like to view?",
             choices: async () => {
-              const empls = await queries.viewAll("employee");
-              return empls.map((eachEmployee) => ({
-                name: `${eachEmployee.first_name} ${eachEmployee.last_name}`,
-                value: eachEmployee.employee_id,
-              }));
+              const managers = await queries.viewAllManagers();
+              // console.log(managers);
+              const mappedManagers = managers.reduce((a, b) => {
+                if (b.manager_id) {
+                  if (!a.some((item) => item.value === b.manager_id))
+                    a.push({ name: b.Manager, value: b.manager_id });
+                }
+                return a;
+              }, []);
+              // console.log(mappedManagers);
+              return mappedManagers;
             },
           };
           const employs = await inquirer.prompt(viewByManaPrompt);
@@ -342,44 +321,6 @@ async function startSearch() {
           console.table(empByMana);
 
           break;
-
-        //   viewEmpByDept(condition) {
-        //     return connection.query(
-        //       `
-        // SELECT e.id AS ID,
-        // e.first_name AS First_Name,
-        // e.last_name AS Last_Name,
-        // r.title AS Title,
-        // d.name AS Department,
-        // d.id AS Dept_ID,
-        // r.salary As Salary,
-        // CONCAT(m.first_name,' ',m.last_name) AS Manager
-        // FROM employee e
-        // LEFT JOIN role r ON e.role_id = r.id
-        // LEFT JOIN department d ON r.department_id = d.id
-        // LEFT JOIN employee m ON e.manager_id = m.id`
-        //       // WHERE employees ? // d.id AS Dept_ID,
-        //     );
-        //   },
-
-        //   viewEmpBy(condition) {
-        //     return connection.query(
-        //       `
-        // SELECT e.id AS ID,
-        // e.first_name AS First_Name,
-        // e.last_name AS Last_Name,
-        // r.title AS Title,
-        // d.name AS Department,
-        // d.id AS Dept_ID,
-        // r.salary As Salary,
-        // CONCAT(m.first_name,' ',m.last_name) AS Manager
-        // FROM employee e
-        // LEFT JOIN role r ON e.role_id = r.id
-        // LEFT JOIN department d ON r.department_id = d.id
-        // LEFT JOIN employee m ON e.manager_id = m.id`
-        //       // WHERE employees ?
-        //     );
-        //   },
       }
 
       setTimeout(startSearch, 1000); //  The function (the function name) is passed to setTimeout() as an argument.
