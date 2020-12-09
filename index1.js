@@ -54,7 +54,7 @@ const addPrompts = async (key) => {
         message: "What is the salary of the new role?",
       },
       {
-        name: "id", //display TABLE role - FOREIGN KEY department_id
+        name: "department_id", //display TABLE role - FOREIGN KEY department_id
         type: "list",
         message: "Which department do you want to add this new role in?",
         choices: async () => {
